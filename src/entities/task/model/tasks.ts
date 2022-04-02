@@ -38,18 +38,15 @@ export const taskModel = createSlice({
   reducers: {
     setTasksList: (state, { payload }: PayloadAction<Task[]>) => {
       state.data = normalizeTasks(payload).entities.tasks;
-      return state;
     },
     addTaskToList: (state, { payload: task }: PayloadAction<Task>) => {
       state.data = { ...state.data, ...normalizeTask(task).entities.tasks };
-      return state;
     },
     toggleTask: ({ data }, { payload: taskId }: PayloadAction<number>) => {
       data[taskId].completed = !data[taskId].completed;
     },
     setQueryConfig: (state, { payload }: PayloadAction<QueryConfig>) => {
       state.queryConfig = payload;
-      return state;
     },
   },
 });
@@ -58,12 +55,12 @@ export const { setQueryConfig, toggleTask } = taskModel.actions;
 
 // react-query actions (everything that async)
 
-const TASKS_QUERY_KEY = "tasks";
+const TASK_LIST_QUERY_KEY = "tasks";
 
 export const getTasksListAsync =
   (params?: typicodeApi.tasks.GetTasksListParams) => (dispatch: Dispatch) =>
     useQuery<AxiosResponse<Task[]>>(
-      TASKS_QUERY_KEY,
+      TASK_LIST_QUERY_KEY,
       () => typicodeApi.tasks.getTasksList(params),
       {
         onSuccess: ({ data }) => dispatch(taskModel.actions.setTasksList(data)),
@@ -74,7 +71,7 @@ export const getTasksListAsync =
 export const getTaskByIdAsync =
   (params: typicodeApi.tasks.GetTaskByIdParams) => (dispatch: Dispatch) =>
     useQuery<AxiosResponse<Task>>(
-      TASKS_QUERY_KEY,
+      "task-single",
       () => typicodeApi.tasks.getTaskById(params),
       {
         onSuccess: ({ data }) => dispatch(taskModel.actions.addTaskToList(data)),
@@ -110,7 +107,8 @@ export const useTask = (taskId: number) =>
     )
   );
 
-export const isTasksLoading = (): boolean => useIsFetching([TASKS_QUERY_KEY]) > 0;
+export const isTaskListLoading = (): boolean =>
+  useIsFetching([TASK_LIST_QUERY_KEY]) > 0;
 
 export const isTasksEmpty = (): boolean =>
   useSelector(

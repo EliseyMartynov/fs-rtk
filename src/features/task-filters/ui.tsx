@@ -6,7 +6,9 @@ import { DEFAULT_FILTER, filtersList, getFilterById } from "./config";
 
 export const TasksFilters = () => {
   const dispatch = useDispatch();
-  const isLoading = taskModel.isTasksLoading();
+
+  const isLoading = taskModel.isTaskListLoading();
+
   const onFilterClick = (config: taskModel.QueryConfig) =>
     dispatch(taskModel.setQueryConfig(config));
 

@@ -2,16 +2,17 @@ import { Button, Layout, Result } from "antd";
 import { useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
+import { ToggleTask } from "features/toggle-task";
 import { TaskCard, taskModel } from "entities/task";
 
 import styles from "./styles.module.scss";
-import { ToggleTask } from "features/toggle-task";
+
 const TaskDetails = () => {
   const dispatch = useDispatch();
   const { taskId } = useParams();
 
   const task = taskModel.useTask(+taskId!);
-  const { isLoading, isError } = taskModel.getTaskByIdAsync({ taskId: +taskId! })(
+  const { isFetching, isError } = taskModel.getTaskByIdAsync({ taskId: +taskId! })(
     dispatch
   );
 
@@ -35,7 +36,7 @@ const TaskDetails = () => {
         <TaskCard
           data={task}
           size="default"
-          loading={isLoading}
+          loading={isFetching}
           className={styles.card}
           bodyStyle={{ height: 400 }}
           extra={<Link to="/">Back to tasks list</Link>}

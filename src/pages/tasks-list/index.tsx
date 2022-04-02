@@ -31,12 +31,12 @@ const TasksList = () => {
 function PageContent() {
   const dispatch = useDispatch();
 
-  const { isLoading } = taskModel.getTasksListAsync()(dispatch);
+  const { isFetching } = taskModel.getTasksListAsync()(dispatch);
 
   const isEmpty = taskModel.isTasksEmpty();
   const filteredTasks = taskModel.getfilteredTasks();
 
-  if (isLoading) return <Spin size="large" />;
+  if (isFetching) return <Spin size="large" />;
 
   if (isEmpty) return <Empty description="No tasks found" />;
 
